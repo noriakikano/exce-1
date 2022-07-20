@@ -2,6 +2,9 @@ import React, { StrictMode, useState } from "react";
 import ReactDom from "react-dom";
 // import ColufulMessage from "./componets/ColourfulMessage";
 import "./style.css";
+import { InputTodo } from "./componets/InputTodo";
+import { IncompleteTodo } from "./componets/IncompleteTodo";
+import { CompleteTodo } from "./componets/CompleteTodo";
 
 const App = () => {
   const [todoText, setTodoText] = useState([]);
@@ -39,41 +42,21 @@ const App = () => {
 
   return (
     <>
-      <div className="input-area">
-        <input
-          placeholder="todoを追加"
-          value={todoText}
-          onChange={onChangeTodoText}
-        />
-        <button onClick={onClickAdd}>追加</button>
-      </div>
-      <div className="incomplete-area">
-        <p className="title">未完了のtodo</p>
-        <ul>
-          {incompleteTodo.map((todo, index) => {
-            return (
-              <div key={todo} className="list-row">
-                <li>{todo}</li>
-                <button onClick={() => onClickDone(index)}>完了</button>
-                <button onClick={() => onClickDelete(index)}>削除</button>
-              </div>
-            );
-          })}
-        </ul>
-      </div>
-      <div className="complete-area">
-        <p className="title">完了のtodo</p>
-        <ul>
-          {completeTodo.map((todo, index) => {
-            return (
-              <div key="todo" className="list-row">
-                <li>{todo}</li>
-                <button onClick={() => onClickAddTodos(index)}>戻す</button>
-              </div>
-            );
-          })}
-        </ul>
-      </div>
+      <InputTodo
+        todoText={todoText}
+        onChange={onChangeTodoText}
+        onClick={onClickAdd}
+        disabled={incompleteTodo.length >= 5}
+      />
+      {incompleteTodo.length >= 5 && (
+        <p className="maximam">登録の上限は５個まで</p>
+      )}
+      <IncompleteTodo
+        inTodo={incompleteTodo}
+        onClickDone={onClickDone}
+        onClickDelete={onClickDelete}
+      />
+      <CompleteTodo a={completeTodo} onClickAddTodos={onClickAddTodos} />
     </>
   );
 };
