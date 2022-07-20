@@ -4,9 +4,9 @@ import ReactDom from "react-dom";
 import "./style.css";
 
 const App = () => {
-  const [todoText, setTodoText] = useState([""]);
-  const [incompleteTodo, setIncompleteTodo] = useState(["aaa", "iii"]);
-  const [completeTodo, setConmpleteTodo] = useState(["ううう", "iii"]);
+  const [todoText, setTodoText] = useState([]);
+  const [incompleteTodo, setIncompleteTodo] = useState([]);
+  const [completeTodo, setConmpleteTodo] = useState([]);
 
   const onChangeTodoText = (event) => setTodoText(event.target.value);
   const onClickAdd = () => {
@@ -20,6 +20,21 @@ const App = () => {
     const newTodos = [...incompleteTodo];
     newTodos.splice(index, 1);
     setIncompleteTodo(newTodos);
+  };
+
+  const onClickDone = (index) => {
+    const newTodosDone = [...completeTodo, incompleteTodo[index]];
+    setConmpleteTodo(newTodosDone);
+    onClickDelete(index);
+  };
+
+  const onClickAddTodos = (index) => {
+    const newTodos = [...incompleteTodo, completeTodo[index]];
+    setIncompleteTodo(newTodos);
+
+    const newTodosDone = [...completeTodo];
+    newTodosDone.splice(index, 1);
+    setConmpleteTodo(newTodosDone);
   };
 
   return (
@@ -39,7 +54,7 @@ const App = () => {
             return (
               <div key={todo} className="list-row">
                 <li>{todo}</li>
-                <button>完了</button>
+                <button onClick={() => onClickDone(index)}>完了</button>
                 <button onClick={() => onClickDelete(index)}>削除</button>
               </div>
             );
@@ -49,12 +64,11 @@ const App = () => {
       <div className="complete-area">
         <p className="title">完了のtodo</p>
         <ul>
-          {completeTodo.map((todo) => {
+          {completeTodo.map((todo, index) => {
             return (
               <div key="todo" className="list-row">
                 <li>{todo}</li>
-                <button>完了</button>
-                <button>削除</button>
+                <button onClick={() => onClickAddTodos(index)}>戻す</button>
               </div>
             );
           })}
